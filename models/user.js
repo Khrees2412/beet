@@ -13,7 +13,7 @@ const UserSchema = new mongoose.Schema({
 		type: String,
 		unique: true,
 	},
-	profile_picture: {
+	avatar: {
 		type: String,
 	},
 	followers: [
@@ -29,7 +29,7 @@ const User = mongoose.model("User", UserSchema);
 const storeUser = async (newUser) => {
 	try {
 		const { email, display_name, href, images } = newUser.body;
-		const profile_picture = images[0].url;
+		const avatar = images[0].url;
 		const profile_link = href;
 		const existing = await User.find({
 			email,
@@ -40,7 +40,7 @@ const storeUser = async (newUser) => {
 				email,
 				display_name,
 				profile_link,
-				profile_picture,
+				avatar,
 			});
 			await user.save();
 			console.log("new user saved");

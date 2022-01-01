@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const spotifyApi = require("../spotify");
+const avatar = require("../controllers/profile");
 const { followUser, unfollowUser } = require("../controllers/follow");
 
 router.get("/user", async (req, res) => {
@@ -75,5 +76,6 @@ router.get("/playlists", async (req, res) => {
 });
 router.post("/follow/:id", followUser);
 router.post("/unfollow/:id", unfollowUser);
+router.put("/update-avatar", avatar);
 
 module.exports = router;
