@@ -59,32 +59,26 @@ const storeUser = async (newUser) => {
 				avatar,
 			});
 			await user.save();
+			const u = getUser(email);
 			console.log("new user saved");
+			return u._id;
 		} else {
 			console.log("user exists already");
+			return;
 		}
 	} catch (error) {
 		console.log(error);
 	}
 };
 
-const getUser = async (req, res) => {
+const getUser = async (email) => {
 	try {
-		const { id } = req.params;
-		const user = await User.find({ _id: id });
+		const user = await User.find({ email });
 		if (user) {
-			res.status(200).json({
-				success: true,
-				message: "User details found",
-				data: user,
-			});
+			return user;
 		}
 	} catch (error) {
-		res.status(500).json({
-			success: true,
-			message: "An error occurred while trying to get user details",
-			error,
-		});
+		throw new Error(error);
 	}
 };
 

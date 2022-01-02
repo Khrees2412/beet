@@ -3,7 +3,7 @@ const User = require("../models/user");
 const followUser = async (req, res) => {
 	try {
 		const followerID = req.params.id;
-		const id = req.body.id;
+		const id = req.cookie["user_id"];
 		// user.followers.push(userID);
 
 		// user.save();
@@ -23,7 +23,7 @@ const followUser = async (req, res) => {
 const unfollowUser = async (req, res) => {
 	try {
 		const followerID = req.params.id;
-		const id = req.body.id;
+		const id = req.cookie["user_id"];
 
 		// const user = User.find({ id });
 		// user.followers.pull(followerID)

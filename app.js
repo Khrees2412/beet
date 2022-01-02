@@ -7,7 +7,7 @@ dotenv.config();
 const app = express();
 
 const spotifyApi = require("./spotify");
-const { storeUser } = require("./models/user");
+const { storeUser, getUser } = require("./models/user");
 const scopes = [
 	"user-read-playback-state",
 	"user-modify-playback-state",
@@ -63,6 +63,11 @@ app.get("/callback", async (req, res) => {
 			const user = await spotifyApi.getMe();
 			if (user) {
 				storeUser(user);
+				const id = user.body.id;
+				res.cookie("user_id", id, {
+					// expires: 1200,
+					maxAge: new Date(Date.now() + 900000),
+				});
 			}
 		} catch (error) {
 			console.error(error);
