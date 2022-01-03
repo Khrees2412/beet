@@ -19,11 +19,13 @@ const recentlyPlayed = async (req, res) => {
 			});
 			const song = {
 				name: track.name,
+				id: track.id,
+				url: track.external_urls.spotify,
 				artists: a,
 				duration_ms: track.duration_ms,
 				preview_url: track.preview_url,
-				track_url: track.external_urls.spotify,
 				played_at: played_at,
+				popularity: track.popularity,
 			};
 			data.push(song);
 		});
@@ -53,9 +55,10 @@ const albums = async (req, res) => {
 
 			const a = {
 				name: item.album.name,
+				url: item.album.external_urls.spotify,
+				id: item.album.id,
 				label: item.album.label,
 				artist: _a,
-				url: item.album.external_urls.spotify,
 				total_tracks: item.album.total_tracks,
 				image: item.album.images[0].url,
 				genres: item.album.genres,
@@ -98,10 +101,22 @@ const playlists = async (req, res) => {
 const followedArtists = async (req, res) => {
 	try {
 		const followedArtists = await spotifyApi.getFollowedArtists({
-			limit: 3,
+			limit: 10,
+		});
+		const data = [];
+		followedArtists.body.artists.items.forEach((item) => {
+			const artist = {
+				name: item.name,
+				id: item.id,
+				url: item.external_urls.spotify,
+				followers: item.followers.total,
+				genres: item.genres,
+				image: item.images[0].url,
+			};
+			data.push(artist);
 		});
 		res.json({
-			data: followedArtists.body,
+			data,
 		});
 	} catch (error) {
 		res.json(error);
@@ -111,10 +126,57 @@ const followedArtists = async (req, res) => {
 const topArtists = async (req, res) => {
 	try {
 		const topArtists = await spotifyApi.getMyTopArtists({
-			limit: 3,
+			limit: 10,
+		});
+		const data = [];
+		topArtists.body.items.forEach((item) => {
+			const artist = {
+				name: item.name,
+				id: item.id,
+				url: item.external_urls.spotify,
+				followers: item.followers.total,
+				genres: item.genres,
+				image: item.images[0].url,
+			};
+			data.push(artist);
 		});
 		res.json({
-			data: topArtists.body,
+			data,
+		});
+	} catch (error) {
+		res.json(error);
+	}
+};
+const topTracks = async (req, res) => {
+	try {
+		const topTracks = await spotifyApi.getMyTopTracks({
+			limit: 10,
+		});
+		const data = [];
+		topTracks.body.items.forEach((item) => {
+			const a = item.artists.map((artist) => {
+				const _artist = {
+					name: artist.name,
+					url: artist.href,
+				};
+				return _artist;
+			});
+
+			const track = {
+				name: item.name,
+				id: item.id,
+				url: item.external_urls.spotify,
+				image: item.album.images[0].url,
+				artists: a,
+				preview_url: item.preview_url,
+				duration: item.duration_ms,
+				popularity: item.popularity,
+			};
+			data.push(track);
+		});
+		res.json({
+			data,
+			// topTracks,
 		});
 	} catch (error) {
 		res.json(error);
@@ -124,11 +186,38 @@ const topArtists = async (req, res) => {
 const currentlyPlaying = async (req, res) => {
 	try {
 		const track = await spotifyApi.getMyCurrentPlayingTrack();
-		const type = track.body.currently_playing_type;
-		let song = {
-			valid: true,
+		const song = {
 			url: track.body.item.external_urls.spotify,
 			name: track.body.item.name,
+			id: track.body.item.id,
+			type: track.body.currently_playing_type,
+			current_time: track.body.timestamp,
+			progress: track.body.progress_ms,
+			is_playing: track.body.is_playing,
+			popularity: track.body.item.popularity,
+			artists: track.body.item.artists,
+			duration: track.body.item.duration_ms,
+			preview_url: track.body.item.preview_url,
+			description: track.body.item.description,
+			image: track.body.item.images[0].url,
+		};
+
+		res.json({
+			data: song,
+		});
+	} catch (error) {
+		res.json(error);
+	}
+};
+
+const playback = async (req, res) => {
+	try {
+		const track = await spotifyApi.getMyCurrentPlaybackState();
+		const song = {
+			url: track.body.item.external_urls.spotify,
+			name: track.body.item.name,
+			id: track.body.item.id,
+			type: track.body.currently_playing_type,
 			current_time: track.body.timestamp,
 			progress: track.body.progress_ms,
 			is_playing: track.body.is_playing,
@@ -137,47 +226,6 @@ const currentlyPlaying = async (req, res) => {
 			preview_url: track.body.item.preview_url,
 			description: track.body.item.description,
 		};
-		// switch (type) {
-		// 	case "track":
-		// 		song = {
-		// 			valid: true,
-		// 			url: track.body.item.external_urls.spotify,
-		// 			name: track.body.item.name,
-		// 			current_time: track.body.timestamp,
-		// 			progress: track.body.progress_ms,
-		// 			is_playing: track.body.is_playing,
-		// 			artists: track.body.item.artists,
-		// 			duration: track.body.item.duration_ms,
-		// 			preview_url: track.body.item.preview_url,
-		// 		};
-		// 		break;
-		// 	case "episode":
-		// 		song = {
-		// 			valid: true,
-		// 			url: track.body.item.external_urls.spotify,
-		// 			name: track.body.item.name,
-		// 			current_time: track.body.timestamp,
-		// 			progress: track.body.progress_ms,
-		// 			is_playing: track.body.is_playing,
-		// 			artists: track.body.item.artists,
-		// 			duration: track.body.item.duration_ms,
-		// 			preview_url: track.body.item.preview_url,
-		// 			description: track.body.item.description,
-		// 		};
-		// 		break;
-		// 	case "ad":
-		// 		song = {
-		// 			valid: false,
-		// 		};
-		// 		break;
-		// 	case "unknown":
-		// 		song = {
-		// 			valid: false,
-		// 		};
-		// 		break;
-		// 	default:
-		// 		break;
-		// }
 
 		res.json({
 			data: song,
@@ -193,5 +241,7 @@ module.exports = {
 	playlists,
 	followedArtists,
 	topArtists,
+	topTracks,
 	currentlyPlaying,
+	playback,
 };

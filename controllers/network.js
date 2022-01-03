@@ -7,10 +7,10 @@ const followUser = async (req, res) => {
 		// user.followers.push(userID);
 
 		// user.save();
-		const user = User.find({ id });
+		const user = User.find({ user_id: id });
 		if (user) {
 			await User.findByIdAndUpdate(
-				{ _id: id },
+				{ user_id: id },
 				{ $addToSet: { followers: followerID } }
 				// { $push: { followers: userID } }
 			);
@@ -29,7 +29,7 @@ const unfollowUser = async (req, res) => {
 		// user.followers.pull(followerID)
 		// user.save()
 		await User.findByIdAndUpdate(
-			{ _id: id },
+			{ user_id: id },
 			{ $pull: { followers: followerID } }
 			// { $push: { followers: followerID } }
 		);
