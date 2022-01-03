@@ -3,7 +3,7 @@ const router = express.Router();
 const { body, param } = require("express-validator");
 
 const { updateAvatar, updateBio } = require("../controllers/profile");
-const { followUser, unfollowUser } = require("../controllers/network");
+const { followUser, unfollowUser } = require("../controllers/user");
 const {
 	recentlyPlayed,
 	albums,
@@ -14,7 +14,7 @@ const {
 	playback,
 	topTracks,
 } = require("../controllers/spotify");
-const { login, callback } = require("../controllers/user");
+const { login, callback } = require("../controllers/auth");
 
 router.get("/user", async (req, res) => {
 	try {
@@ -35,7 +35,7 @@ router.get("/top-artists", topArtists);
 router.get("/top-tracks", topTracks);
 router.get("/playlists", playlists);
 
-// Network
+// User
 router.post(
 	"/follow/:id",
 	body("").not().isEmpty(),
