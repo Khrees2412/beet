@@ -1,5 +1,24 @@
 const User = require("../models/user");
 
+const getUser = async (req, res) => {
+	try {
+		const id = req.cookies["user_id"];
+		const user = await User.find({
+			user_id: id,
+		});
+		res.json({
+			data: user,
+		});
+	} catch (error) {
+		res.json({
+			success: false,
+			message:
+				"Could not find user, cookies expired or user is not authenticated",
+			error,
+		});
+	}
+};
+
 const followUser = async (req, res) => {
 	try {
 		const followerID = req.params.id;
@@ -40,4 +59,5 @@ const unfollowUser = async (req, res) => {
 module.exports = {
 	followUser,
 	unfollowUser,
+	getUser,
 };

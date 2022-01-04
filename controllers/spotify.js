@@ -100,9 +100,7 @@ const playlists = async (req, res) => {
 
 const followedArtists = async (req, res) => {
 	try {
-		const followedArtists = await spotifyApi.getFollowedArtists({
-			limit: 10,
-		});
+		const followedArtists = await spotifyApi.getFollowedArtists();
 		const data = [];
 		followedArtists.body.artists.items.forEach((item) => {
 			const artist = {
@@ -126,7 +124,7 @@ const followedArtists = async (req, res) => {
 const topArtists = async (req, res) => {
 	try {
 		const topArtists = await spotifyApi.getMyTopArtists({
-			limit: 10,
+			limit: 20,
 		});
 		const data = [];
 		topArtists.body.items.forEach((item) => {
@@ -150,7 +148,7 @@ const topArtists = async (req, res) => {
 const topTracks = async (req, res) => {
 	try {
 		const topTracks = await spotifyApi.getMyTopTracks({
-			limit: 10,
+			limit: 20,
 		});
 		const data = [];
 		topTracks.body.items.forEach((item) => {
@@ -235,6 +233,45 @@ const playback = async (req, res) => {
 	}
 };
 
+const addToAlbums = async (req, res) => {
+	try {
+		const albumID = req.body.albumID;
+		const response = await spotifyApi.addToMySavedAlbums(albumID);
+		res.json({
+			success: true,
+			response,
+		});
+	} catch (error) {
+		res.json(error);
+	}
+};
+
+const addToTracks = async (req, res) => {
+	try {
+		const trackID = req.body.trackID;
+		const response = await spotifyApi.addToMySavedTracks(trackID);
+		res.json({
+			success: true,
+			response,
+		});
+	} catch (error) {
+		res.json(error);
+	}
+};
+
+const followPlaylist = async (req, res) => {
+	try {
+		const playlistID = req.body.playlistID;
+		const response = await spotifyApi.followPlaylist(playlistID);
+		res.json({
+			success: true,
+			response,
+		});
+	} catch (error) {
+		res.json(error);
+	}
+};
+
 module.exports = {
 	recentlyPlayed,
 	albums,
@@ -244,4 +281,7 @@ module.exports = {
 	topTracks,
 	currentlyPlaying,
 	playback,
+	addToAlbums,
+	addToTracks,
+	followPlaylist,
 };
