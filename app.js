@@ -1,5 +1,6 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cookieparser = require("cookie-parser");
 const connectDB = require("./database/config");
 const routes = require("./routes/routes");
 
@@ -7,11 +8,13 @@ dotenv.config();
 const app = express();
 
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
+// app.use(cookieparser());
+
 app.use("/api/v1", routes);
 
 app.get("/", (req, res) => {
-	res.send("<h1>Home</h1>");
+	res.send("<h1 style=`text-align:center`>You're home, :) </h1>");
 });
 
 const PORT = process.env.PORT || 5000;

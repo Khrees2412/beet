@@ -1,10 +1,12 @@
 const spotifyApi = require("../spotify");
+const User = require("../models/user");
 
 const recentlyPlayed = async (req, res) => {
 	try {
 		const tracks = await spotifyApi.getMyRecentlyPlayedTracks({
 			limit: 10,
 		});
+		const id = req.cookies?.user_id;
 
 		const data = [];
 		tracks.body.items.forEach((item, _) => {
@@ -29,6 +31,7 @@ const recentlyPlayed = async (req, res) => {
 			};
 			data.push(song);
 		});
+		// const user = User.
 		res.json({
 			data,
 		});
@@ -62,6 +65,7 @@ const albums = async (req, res) => {
 				total_tracks: item.album.total_tracks,
 				image: item.album.images[0].url,
 				genres: item.album.genres,
+				popularity: item.album.popularity,
 			};
 			data.push(a);
 		});
@@ -85,7 +89,7 @@ const playlists = async (req, res) => {
 				url: playlist.external_urls.spotify,
 				description: playlist.description,
 				owner: playlist.owner.display_name,
-				track_number: playlist.tracks.total,
+				total_tracks: playlist.tracks.total,
 				image_url: playlist.images[0].url,
 			};
 			data.push(list);
@@ -223,6 +227,8 @@ const playback = async (req, res) => {
 			duration: track.body.item.duration_ms,
 			preview_url: track.body.item.preview_url,
 			description: track.body.item.description,
+			image: track.body.item.images[0].url,
+			popularity: track.body.item.popularity,
 		};
 
 		res.json({
