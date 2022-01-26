@@ -1,3 +1,4 @@
+const path = require("path");
 const express = require("express");
 const dotenv = require("dotenv");
 const cookieparser = require("cookie-parser");
@@ -11,6 +12,7 @@ app.use(cookieparser());
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static(path.resolve(__dirname, "./client/build")));
 
 app.use("/api/v1", routes);
 
