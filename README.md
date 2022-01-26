@@ -12,11 +12,11 @@ Beet is a social networking application where people are connected by their coll
 
     Music is a powerful tool, it can be leveraged in many exciting ways, this is one there are more to come.
 
-## Development
+# Development
 
-    Beet was built around [Spotify's](https://www.spotify.com) API. Frontend built with Reactjs and Backend using Nodejs + Expressjs
+    Beet was built around [Spotify's API](https://www.spotify.com). Frontend built with Reactjs and Backend using Nodejs + Expressjs.
 
-### Core features
+# Core features
 
 -   Home Section
 
