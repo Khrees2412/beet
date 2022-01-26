@@ -78,7 +78,7 @@ const callback = async (req, res) => {
 
 const storeUser = async (newUser) => {
 	try {
-		const { email, display_name, href, images } = newUser.body;
+		const { email, display_name, href, images, id } = newUser.body;
 		const avatar = images[0].url;
 		const profile_link = href;
 		const existing = await User.find({
@@ -91,11 +91,12 @@ const storeUser = async (newUser) => {
 				display_name,
 				profile_link,
 				avatar,
+				user_id: id,
 			});
 			await user.save();
 			const u = getUser(email);
-			console.log("new user saved");
-			return u._id;
+			console.log("new user saved", u.user_id);
+			return u.user_id;
 		} else {
 			console.log("user exists already");
 			return;

@@ -6,7 +6,8 @@ const recentlyPlayed = async (req, res) => {
 		const tracks = await spotifyApi.getMyRecentlyPlayedTracks({
 			limit: 10,
 		});
-		const id = req.cookies?.user_id;
+		const id = "31imiso5jpcqayh2wwkkzsqoygc4";
+		console.log(id);
 
 		const data = [];
 		tracks.body.items.forEach((item, _) => {
@@ -31,9 +32,22 @@ const recentlyPlayed = async (req, res) => {
 			};
 			data.push(song);
 		});
-		// const user = User.
+		const user = await User.find({
+			user_id: id,
+		});
+		user.recently_played.name = "data";
+		await user.save();
+
+		// await User.findByIdAndUpdate(
+		// 	{ user_id: id },
+		// 	{ $addToSet: { recently_played: [...data] } }
+		// 	// { $push: { followers: userID } }
+		// );
+
 		res.json({
-			data,
+			success: true,
+			user,
+			message: "Recently played updated",
 		});
 	} catch (error) {
 		res.json(error);
