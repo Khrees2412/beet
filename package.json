@@ -6,8 +6,7 @@
 	"scripts": {
 		"test": "",
 		"dev": "nodemon app.js",
-		"start": "node app.js",
-		"heroku-postbuild": "cd client && npm install && npm run build"
+		"start": "node app.js"
 	},
 	"keywords": [],
 	"author": "Christian Ndu",
