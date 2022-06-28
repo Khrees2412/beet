@@ -14,7 +14,7 @@ Beet is a social networking application where people are connected by their coll
 
 # Development
 
-    Beet was built around (Spotify's API)[https://spotify.com]. Frontend built with Reactjs and Backend using Nodejs + Expressjs.
+    Beet was built around [Spotify's API](https://spotify.com). Frontend built with Reactjs and Backend using Nodejs + Expressjs.
 
 # Core features
 
